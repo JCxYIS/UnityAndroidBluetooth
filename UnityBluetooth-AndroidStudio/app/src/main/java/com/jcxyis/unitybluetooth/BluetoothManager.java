@@ -13,6 +13,9 @@ import android.content.IntentFilter;
 import android.util.Log;
 import android.widget.Toast;
 
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.UUID;
 
@@ -35,7 +38,6 @@ public class BluetoothManager extends UnityPlayerActivity {
         IntentFilter filter2 = new IntentFilter(BluetoothDevice.ACTION_PAIRING_REQUEST);
         this.registerReceiver(pairRequestHandler, filter2);
     }
-
 
 
     // --- Bt ---
@@ -84,6 +86,37 @@ public class BluetoothManager extends UnityPlayerActivity {
         }
     }
 
+    public boolean Send(final String message) {
+        try {
+            socket.getOutputStream().write(message.getBytes());
+            Log.v("tManager", "Sent "+message);
+            return true;
+        }
+        catch (Exception e) {
+            Log.e("BtManager", "Failed to send message");
+            e.printStackTrace();
+            return false;
+        }
+//        return false;
+    }
+
+    // Read line
+    public String ReadLine(){
+        try {
+            InputStream inputStream = socket.getInputStream();
+            if(inputStream.available() > 0){
+                BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
+                String r = reader.readLine();
+                Log.v("tManager", "Get "+r);
+                return r;
+            }
+            else return "";
+        } catch (Exception e) {
+            return "";
+        }
+    }
+
+    // Stop
     @SuppressLint("MissingPermission")
     public void DisableBt() {
         bt.disable();
