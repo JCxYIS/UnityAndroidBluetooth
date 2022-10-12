@@ -9,7 +9,7 @@ namespace JC.BluetoothUnity.Demo
     {    
         [SerializeField] SearchResult _resultTemplate;
         [SerializeField] Button _startSearchButt;
-        bool _isSearching = false;
+
         List<SearchResult> _populatedResult = new List<SearchResult>();
 
         // Start is called before the first frame update
@@ -27,7 +27,8 @@ namespace JC.BluetoothUnity.Demo
 
         public void StartSearching()
         {
-            _isSearching = BluetoothManager.StartDiscovery();
+            BluetoothManager.StartDiscovery();
+            StopAllCoroutines();
             StartCoroutine(PopulateListAsync());
         }
 
@@ -37,6 +38,8 @@ namespace JC.BluetoothUnity.Demo
             {
                 // Get List
                 string[] deviceList = BluetoothManager.GetAvailableDevices();
+                // string[] deviceList = BluetoothManager.StrArrTest(Random.Range(2,9)); // test
+
 
                 // Delete Old List
                 _populatedResult.ForEach(r => Destroy(r.gameObject));
@@ -53,6 +56,7 @@ namespace JC.BluetoothUnity.Demo
                 }
 
                 // update every 1s
+                // print("Updated device list. count="+deviceList.Length);
                 yield return new WaitForSecondsRealtime(1);
             }
         }

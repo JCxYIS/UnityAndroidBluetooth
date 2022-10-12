@@ -4,8 +4,6 @@ using UnityEngine;
 
 public class BluetoothManager
 {
-    const string CLASS_NAME = "com.jcxyis.unitybluetooth";
-
     private static AndroidJavaClass javaClass; // aka JC :P
     private static AndroidJavaObject javaInstance = null;   
 
@@ -23,7 +21,7 @@ public class BluetoothManager
             // unityPlayer = new AndroidJavaClass("com.unity3d.player.UnityPlayer");
             // activity = unityPlayer.GetStatic<AndroidJavaObject>("currentActivity");
             // context = activity.Call<AndroidJavaObject>("getApplicationContext");
-            javaClass = new AndroidJavaClass(CLASS_NAME);
+            javaClass = new AndroidJavaClass("com.jcxyis.unitybluetooth.BluetoothManager");
             javaInstance = javaClass.CallStatic<AndroidJavaObject>("getInstance");
             Debug.Log("[BluetoothManager] Inited.");
         }                    
@@ -32,10 +30,10 @@ public class BluetoothManager
     /* -------------------------------------------------------------------------- */
     
 
-    public static bool StartDiscovery()
+    public static void StartDiscovery()
     {
         EnsureInstance();
-        return javaInstance.Call<bool>("StartDiscovery");
+        javaInstance.Call("StartDiscovery");
     }
 
     public static string[] GetAvailableDevices()
@@ -71,8 +69,15 @@ public class BluetoothManager
     /// <summary>
     /// show a Toast 
     /// </summary>
-    public void Toast(string msg)
+    public static void Toast(string msg)
     {
+        EnsureInstance();
         javaClass.CallStatic("Toast", msg);
+    }
+
+    public static string[] StrArrTest(int len)
+    {
+        EnsureInstance();
+        return javaInstance.Call<string[]>("StrArrTest", len);
     }
 }

@@ -401,9 +401,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fdeef8ffdccfe0c4497c8dc4c3c94f82, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _nameText: {fileID: 0}
-  _macText: {fileID: 0}
-  _connectButton: {fileID: 0}
+  _nameText: {fileID: 574767076718587905}
+  _macText: {fileID: 574767076735582910}
+  _connectButton: {fileID: 574767076872725525}
 --- !u!1 &574767076300939339
 GameObject:
   m_ObjectHideFlags: 0
