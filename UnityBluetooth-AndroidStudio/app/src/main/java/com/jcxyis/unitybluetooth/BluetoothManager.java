@@ -47,8 +47,28 @@ public class BluetoothManager extends UnityPlayerActivity {
     public void StartDiscovery() {
         // init
         // Get device list
+        // https://stackoverflow.com/questions/19683034/getting-the-address-and-names-of-all-available-bluetooth-devices-in-android
         IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
         filter.addAction(BluetoothAdapter.ACTION_DISCOVERY_FINISHED);
+        BroadcastReceiver discoverFinishHandler = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                String action = intent.getAction();
+
+                // When discovery finds a device
+                if (BluetoothDevice.ACTION_FOUND.equals(action)) {
+                    // Get the BluetoothDevice object from the Intent
+                    BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
+                    if(!availableDevices.contains(device)) {
+                        availableDevices.add(device);
+                    }
+                }
+                // end discovery
+                else if (BluetoothAdapter.ACTION_DISCOVERY_FINISHED.equals(action)) {
+                    Log.v("BtManager","Discovery Finished ");
+                }
+            }
+        };
         this.registerReceiver(discoverFinishHandler, filter);
 
         // Input pin code in code
@@ -136,26 +156,7 @@ public class BluetoothManager extends UnityPlayerActivity {
     }
 
     // --- Intent filters ---
-    // https://stackoverflow.com/questions/19683034/getting-the-address-and-names-of-all-available-bluetooth-devices-in-android
-    private final BroadcastReceiver discoverFinishHandler = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            String action = intent.getAction();
 
-            // When discovery finds a device
-            if (BluetoothDevice.ACTION_FOUND.equals(action)) {
-                // Get the BluetoothDevice object from the Intent
-                BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
-                if(!availableDevices.contains(device)) {
-                    availableDevices.add(device);
-                }
-            }
-            // end discovery
-            else if (BluetoothAdapter.ACTION_DISCOVERY_FINISHED.equals(action)) {
-                Log.v("BtManager","Discovery Finished ");
-            }
-        }
-    };
 
     // https://stackoverflow.com/questions/35519321/android-bluetooth-pairing-without-user-enter-pin-and-confirmation-using-android
     private final BroadcastReceiver pairRequestHandler = new BroadcastReceiver() {
