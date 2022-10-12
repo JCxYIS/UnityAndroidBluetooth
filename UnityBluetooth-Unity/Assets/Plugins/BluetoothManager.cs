@@ -7,7 +7,9 @@ public class BluetoothManager
     const string CLASS_NAME = "com.jcxyis.unitybluetooth";
 
     private static AndroidJavaClass javaClass; // aka JC :P
-    private static AndroidJavaObject javaInstance = null;    
+    private static AndroidJavaObject javaInstance = null;   
+
+     /* -------------------------------------------------------------------------- */
 
     private static void EnsureInstance()
     {
@@ -26,12 +28,14 @@ public class BluetoothManager
             Debug.Log("[BluetoothManager] Inited.");
         }                    
     }
+
+    /* -------------------------------------------------------------------------- */
     
 
-    public static void StartDiscovery()
+    public static bool StartDiscovery()
     {
         EnsureInstance();
-        javaInstance.Call("StartDiscovery");
+        return javaInstance.Call<bool>("StartDiscovery");
     }
 
     public static string[] GetAvailableDevices()
@@ -55,7 +59,13 @@ public class BluetoothManager
     public static string ReadLine()
     {
         EnsureInstance();
-        return javaInstance.CallStatic<string>("ReadLine");
+        return javaInstance.Call<string>("ReadLine");
+    }
+
+    public static void Stop()
+    {
+        EnsureInstance();
+        javaInstance.Call("Stop");
     }
 
     /// <summary>
