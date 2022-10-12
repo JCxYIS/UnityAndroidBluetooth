@@ -15,6 +15,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
@@ -76,7 +77,7 @@ public class BluetoothManager extends UnityPlayerActivity {
     }
 
     // Connect
-    public boolean Connect(String mac) {
+    public boolean Connect(final String mac) {
         connectedDevice = bt.getRemoteDevice(mac);
         UUID myUUID = UUID.fromString("00001101-0000-1000-8000-9487010C8763"); // random uuid :P
         try {
@@ -129,9 +130,13 @@ public class BluetoothManager extends UnityPlayerActivity {
 
     // Stop
     @SuppressLint("MissingPermission")
-    public void Stop() {
-        bt.disable();
-        Log.i("BtManager", "Stop! BT Shut down");
+    public void Stop() throws IOException {
+        if(socket != null) {
+            socket.close();
+        }
+        socket = null;
+        connectedDevice = null;
+        Log.i("BtManager", "Stopped!");
     }
 
     // --- Intent filters ---
@@ -147,6 +152,7 @@ public class BluetoothManager extends UnityPlayerActivity {
                 BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
                 if(!availableDevices.contains(device)) {
                     availableDevices.add(device);
+                    Log.i("BtManager", "Discover: "+device.getName() + "("+ device.getAddress() + ")");
                 }
             }
             // end discovery
@@ -194,5 +200,13 @@ public class BluetoothManager extends UnityPlayerActivity {
         });
     }
 
-
+    public String[] StrArrTest(int len) {
+        ArrayList<String> arl = new ArrayList<String>();
+        for(int i = 0; i < len; i++) {
+            arl.add("abcd123|00:11:22:AA:BB:CC");
+        }
+        String[] arr = new String[arl.size()];
+        arr = arl.toArray(arr);
+        return arr;
+    }
 }
