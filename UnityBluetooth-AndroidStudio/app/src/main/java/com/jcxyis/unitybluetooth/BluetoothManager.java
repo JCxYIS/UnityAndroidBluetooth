@@ -35,16 +35,9 @@ public class BluetoothManager extends UnityPlayerActivity {
     public BluetoothSocket socket;
 
 
-    // --- OnStart ---
+    // --- Constructor ---
     public BluetoothManager() {
-        // Get device list
-        IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
-        filter.addAction(BluetoothAdapter.ACTION_DISCOVERY_FINISHED);
-        this.registerReceiver(discoverFinishHandler, filter);
 
-        // pin
-        IntentFilter filter2 = new IntentFilter(BluetoothDevice.ACTION_PAIRING_REQUEST);
-        this.registerReceiver(pairRequestHandler, filter2);
     }
 
 
@@ -52,6 +45,17 @@ public class BluetoothManager extends UnityPlayerActivity {
 
     // Start Discovering devices
     public void StartDiscovery() {
+        // init
+        // Get device list
+        IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
+        filter.addAction(BluetoothAdapter.ACTION_DISCOVERY_FINISHED);
+        this.registerReceiver(discoverFinishHandler, filter);
+
+        // Input pin code in code
+//        IntentFilter filter2 = new IntentFilter(BluetoothDevice.ACTION_PAIRING_REQUEST);
+//        this.registerReceiver(pairRequestHandler, filter2);
+
+        // bt start
         bt = BluetoothAdapter.getDefaultAdapter();
         if(!bt.isEnabled()) {
             bt.enable();
