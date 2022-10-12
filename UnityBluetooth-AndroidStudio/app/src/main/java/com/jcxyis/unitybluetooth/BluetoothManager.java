@@ -1,5 +1,6 @@
 package com.jcxyis.unitybluetooth;
 
+import com.unity3d.player.UnityPlayer;
 import com.unity3d.player.UnityPlayerActivity;
 
 import android.annotation.SuppressLint;
@@ -21,6 +22,13 @@ import java.util.UUID;
 
 @SuppressLint("MissingPermission")
 public class BluetoothManager extends UnityPlayerActivity {
+    // instance (expose for unity to get)
+    private static final BluetoothManager _instance = new BluetoothManager();
+    public static BluetoothManager getInstance() {
+        return _instance;
+    }
+
+    // var
     public BluetoothAdapter bt;
     public ArrayList<BluetoothDevice> availableDevices = new ArrayList<BluetoothDevice>();
     public BluetoothDevice connectedDevice;
@@ -118,9 +126,9 @@ public class BluetoothManager extends UnityPlayerActivity {
 
     // Stop
     @SuppressLint("MissingPermission")
-    public void DisableBt() {
+    public void Stop() {
         bt.disable();
-        Log.i("BtManager", "Shut down");
+        Log.i("BtManager", "Stop! BT Shut down");
     }
 
     // --- Intent filters ---
@@ -171,9 +179,17 @@ public class BluetoothManager extends UnityPlayerActivity {
 
     // --- Utility --
 
-    // Toast
-    public void Toast(Context context, String info){
-        Toast.makeText(context, info,Toast.LENGTH_SHORT).show();
+    public static void Toast(final String msg) //傳入的參入必須為final，才可讓Runnable()內部使用
+    {
+        UnityPlayer.currentActivity.runOnUiThread(new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                Toast.makeText(UnityPlayer.currentActivity, msg, Toast.LENGTH_SHORT).show();
+            }
+        });
     }
+
 
 }
