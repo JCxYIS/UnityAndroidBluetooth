@@ -51,7 +51,7 @@ public class BluetoothManager extends UnityPlayerActivity {
     public void StartDiscovery() {
         // init
 
-        // Input pin code in code
+        // Input pin code
 //        IntentFilter filter2 = new IntentFilter(BluetoothDevice.ACTION_PAIRING_REQUEST);
 //        UnityPlayer.currentActivity.registerReceiver(pairRequestHandler, filter2);
 
@@ -157,7 +157,7 @@ public class BluetoothManager extends UnityPlayerActivity {
             }
             // end discovery
             else if (BluetoothAdapter.ACTION_DISCOVERY_FINISHED.equals(action)) {
-                Log.v("BtManager","Discovery Finished ");
+                Log.i("BtManager","Discovery Finished ");
             }
         }
     };
