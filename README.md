@@ -9,15 +9,13 @@ Connect with bluetooth in Unity (Android).
 - Send/Write Message
 
 ## Demo
-<img src="https://i.imgur.com/SiCdH6U.png" style="max-height: 400px" />
-<img src="https://i.imgur.com/efwZzib.png" style="max-height: 400px" />
-<img src="https://i.imgur.com/Tw0lsmE.png" style="" />
+<img src="https://i.imgur.com/SiCdH6U.png" height="400" /> <img src="https://i.imgur.com/efwZzib.png" height="400" /> <img src="https://i.imgur.com/Tw0lsmE.png" height="400" />
 
 
 ## Notes
 
 ### AndroidManifest Permission
-These are permissions required!! You **MUST** add them to your `AndroidManifest.xml` manifest.
+These permissions are required!! You **MUST** add them to your manifest (`Plugins/Android/AndroidManifest.xml`).
 
 ```xml
     <!-- Bluetooth -->
@@ -30,7 +28,7 @@ These are permissions required!! You **MUST** add them to your `AndroidManifest.
 
 After you install the app, you may need to manually enable the permissions under android application settings.
 
-<img src="https://i.imgur.com/33vq1ev.png" style="max-height: 400px" />
+<img src="https://i.imgur.com/33vq1ev.png" height="400" />
 
 
 ## Project Stucture

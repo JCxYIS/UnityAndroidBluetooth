@@ -1,6 +1,7 @@
-#define USE_HC0506 true  // if use HC-05/HC-06, uncomment this
-// #define USE_ESP32 true  // if use esp32, uncomment this
+#define USE_HC0506 true  // if using HC-05/HC-06, uncomment this
+// #define USE_ESP32 true  // if using esp32, uncomment this
 
+/* -------------------------------------------------------------------------- */
 
 #if USE_HC0506
 #include <SoftwareSerial.h> // HC-05/ HC-06
@@ -40,8 +41,6 @@ void loop() {
 
   // Get message from blutetooth, and print in serial
   if(bluetooth.available()) {
-    // String msg = bluetooth.readString();
-    // Serial.println("[From Bluetooth] " + msg);
     String s = bluetooth.readString();
     Serial.print("BLUETOOTH GET << " + s);
   }  
