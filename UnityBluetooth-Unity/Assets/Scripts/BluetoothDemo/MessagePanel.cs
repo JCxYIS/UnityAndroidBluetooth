@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
 using System.Collections.Generic;
+using System;
 
 namespace JC.BluetoothUnity.Demo
 {
@@ -20,8 +21,9 @@ namespace JC.BluetoothUnity.Demo
         void Start()
         {
             _stopButt.onClick.AddListener(Stop);
-            _clearButt.onClick.AddListener(Clear);
+            _clearButt.onClick.AddListener(ClearMessage);
             _sendButt.onClick.AddListener(Send);
+            ClearMessage();
         }
 
         /// <summary>
@@ -29,8 +31,17 @@ namespace JC.BluetoothUnity.Demo
         /// </summary>
         void Update()
         {
-            string line = BluetoothManager.ReadLine();
-            _messageText.text += line;
+            int available = BluetoothManager.Available();
+            if(available > 0)
+            {
+                string line = BluetoothManager.ReadLine();
+                PushMessage($"<color=lime>REMOTE</color>: {line}\n");
+            }
+            else if(available < 0)
+            {
+                // Error!
+                PushMessage("<color=red>CONNECTION LOST</color>\n");
+            }
         }
 
         void Stop()
@@ -38,20 +49,25 @@ namespace JC.BluetoothUnity.Demo
             enabled = false;
             BluetoothManager.Stop();
             FindObjectOfType<PanelController>().ShowPanel(PanelController.PanelType.Search);
-        }
-
-        void Clear()
-        {
-            _messageText.text = "";
-        }
+        }        
 
         void Send()
-        {
-            if(BluetoothManager.Send(_sendInput.text))
+        {            
+            PushMessage($"<color=yellow>ME</color>: {_sendInput.text}");            
+            if(BluetoothManager.Send(_sendInput.text + "\r\n"))
             {
                 // send ok
                 _sendInput.text = "";
             }
+        }
+
+        void PushMessage(string msg)
+        {
+            _messageText.text += $"{DateTime.Now.ToString("HH:mm:ss")} {msg}\n";
+        }
+        void ClearMessage()
+        {
+            _messageText.text = "";
         }
     }
 }

@@ -53,7 +53,7 @@ GameObject:
   - component: {fileID: 6200626796765868075}
   - component: {fileID: 1792722333858548437}
   m_Layer: 5
-  m_Name: SendButton (1)
+  m_Name: SendButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1179,7 +1179,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 3027928243841229271}
   m_Direction: 2
   m_Value: 1
-  m_Size: 0.82365525
+  m_Size: 0.5232251
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -1590,3 +1590,5 @@ MonoBehaviour:
   _messageText: {fileID: 3436272588885346331}
   _stopButt: {fileID: 935927639493304110}
   _clearButt: {fileID: 8407374593568866699}
+  _sendInput: {fileID: 8965826018108605333}
+  _sendButt: {fileID: 1792722333858548437}

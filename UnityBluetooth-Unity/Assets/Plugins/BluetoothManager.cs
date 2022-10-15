@@ -54,6 +54,11 @@ public class BluetoothManager
         return javaInstance.Call<bool>("Send", data);
     }
 
+    public static int Available()
+    {
+        return javaInstance.Call<int>("Available");
+    }
+
     public static string ReadLine()
     {
         EnsureInstance();

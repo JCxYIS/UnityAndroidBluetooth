@@ -35,7 +35,7 @@ namespace JC.BluetoothUnity.Demo
         public void ShowPanel(PanelType panel)
         {
             Destroy(_currentPanel);
-            Instantiate(_panels[(int)panel]);
+            _currentPanel = Instantiate(_panels[(int)panel]);
         }
     }
 }

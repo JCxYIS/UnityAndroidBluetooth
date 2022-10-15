@@ -22,7 +22,7 @@ import java.util.ArrayList;
 import java.util.UUID;
 
 @SuppressLint("MissingPermission")
-public class BluetoothManager extends UnityPlayerActivity {
+public class BluetoothManager  {
     // instance (expose for unity to get)
     private static final BluetoothManager _instance = new BluetoothManager();
     public static BluetoothManager getInstance() {
@@ -79,7 +79,7 @@ public class BluetoothManager extends UnityPlayerActivity {
     // Connect
     public boolean Connect(final String mac) {
         connectedDevice = bt.getRemoteDevice(mac);
-        UUID myUUID = UUID.fromString("00001101-0000-1000-8000-9487010C8763"); // random uuid :P
+        UUID myUUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB"); // idk, magic uuid
         try {
             // create a RFCOMM (SPP) connection
             socket = connectedDevice.createInsecureRfcommSocketToServiceRecord(myUUID);
@@ -112,6 +112,18 @@ public class BluetoothManager extends UnityPlayerActivity {
 //        return false;
     }
 
+    // Available
+    public int Available() {
+        try {
+            return socket.getInputStream().available();
+        }
+        catch (Exception e) {
+            Log.w("BtManager", "Read Error (avail)");
+            e.printStackTrace();
+            return -1;
+        }
+    }
+
     // Read line
     public String ReadLine(){
         try {
@@ -119,17 +131,18 @@ public class BluetoothManager extends UnityPlayerActivity {
             if(inputStream.available() > 0){
                 BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
                 String r = reader.readLine();
-                Log.v("tManager", "Get "+r);
+                Log.v("BtManager", "Get "+r);
                 return r;
             }
             else return "";
         } catch (Exception e) {
+            Log.w("BtManager", "Read Error");
+            e.printStackTrace();
             return "";
         }
     }
 
     // Stop
-    @SuppressLint("MissingPermission")
     public void Stop() throws IOException {
         if(socket != null) {
             socket.close();
