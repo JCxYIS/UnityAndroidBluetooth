@@ -1,10 +1,10 @@
-// #define USE_HC0506 true  // if use HC-05/HC-06, uncomment this
-#define USE_ESP32 true  // if use esp32, uncomment this
+#define USE_HC0506 true  // if use HC-05/HC-06, uncomment this
+// #define USE_ESP32 true  // if use esp32, uncomment this
 
 
 #if USE_HC0506
 #include <SoftwareSerial.h> // HC-05/ HC-06
-SoftwareSerial bluetooth(12, 13); // Manually set (RX, TX) of HC-05/ HC-06
+SoftwareSerial bluetooth(10, 11); // Manually set (RX, TX) of HC-05/ HC-06
 
 #elif USE_ESP32
 #include <BluetoothSerial.h> // built in bluetooth, e.g. esp32

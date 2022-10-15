@@ -9,6 +9,7 @@ namespace JC.BluetoothUnity.Demo
     {    
         [SerializeField] SearchResult _resultTemplate;
         [SerializeField] Button _startSearchButt;
+        [SerializeField] InputField _pinInputField;
 
         List<SearchResult> _populatedResult = new List<SearchResult>();
 
@@ -51,7 +52,7 @@ namespace JC.BluetoothUnity.Demo
                     string[] deviceStrs = deviceRawString.Split('|'); // split with '|'
                     var newResult = Instantiate(_resultTemplate, _resultTemplate.transform.parent);
                     newResult.gameObject.SetActive(true);
-                    newResult.Init(deviceStrs[0], deviceStrs[1]);
+                    newResult.Init(deviceStrs[0], deviceStrs[1], _pinInputField);
                     _populatedResult.Add(newResult);
                 }
 

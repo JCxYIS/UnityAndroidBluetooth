@@ -18,6 +18,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.UUID;
 
@@ -34,14 +35,20 @@ public class BluetoothManager  {
     public ArrayList<BluetoothDevice> availableDevices = new ArrayList<BluetoothDevice>();
     public BluetoothDevice connectedDevice;
     public BluetoothSocket socket;
+    public String usePin = "";
 
 
     // --- Constructor ---
     public BluetoothManager() {
+        // Init intent filters
         // Get device list
         IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
         filter.addAction(BluetoothAdapter.ACTION_DISCOVERY_FINISHED);
         UnityPlayer.currentActivity.registerReceiver(discoverFinishHandler, filter);
+
+        // Input pin code
+        IntentFilter filter2 = new IntentFilter(BluetoothDevice.ACTION_PAIRING_REQUEST);
+        UnityPlayer.currentActivity.registerReceiver(pairRequestHandler, filter2);
     }
 
 
@@ -51,9 +58,8 @@ public class BluetoothManager  {
     public void StartDiscovery() {
         // init
 
-        // Input pin code
-//        IntentFilter filter2 = new IntentFilter(BluetoothDevice.ACTION_PAIRING_REQUEST);
-//        UnityPlayer.currentActivity.registerReceiver(pairRequestHandler, filter2);
+        // init the list
+        availableDevices.clear();
 
         // bt start
         bt = BluetoothAdapter.getDefaultAdapter();
@@ -77,8 +83,9 @@ public class BluetoothManager  {
     }
 
     // Connect
-    public boolean Connect(final String mac) {
+    public boolean Connect(final String mac, final String pin) {
         connectedDevice = bt.getRemoteDevice(mac);
+        usePin = pin;
         UUID myUUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB"); // idk, magic uuid
         try {
             // create a RFCOMM (SPP) connection
@@ -149,10 +156,14 @@ public class BluetoothManager  {
         }
         socket = null;
         connectedDevice = null;
+//        UnityPlayer.currentActivity.unregisterReceiver(discoverFinishHandler);
+//        UnityPlayer.currentActivity.unregisterReceiver(pairRequestHandler);
         Log.i("BtManager", "Stopped!");
     }
 
     // --- Intent filters ---
+
+    // Append available device list
     // https://stackoverflow.com/questions/19683034/getting-the-address-and-names-of-all-available-bluetooth-devices-in-android
     private final BroadcastReceiver discoverFinishHandler = new BroadcastReceiver() {
         @Override
@@ -175,20 +186,25 @@ public class BluetoothManager  {
         }
     };
 
+    // Programmatically input pin code on connect
     // https://stackoverflow.com/questions/35519321/android-bluetooth-pairing-without-user-enter-pin-and-confirmation-using-android
     private final BroadcastReceiver pairRequestHandler = new BroadcastReceiver() {
         public void onReceive(Context context, Intent intent) {
+            // no need to use pin
+            if(usePin.equals("")) {
+                return;
+            }
+            // use pin
             String action = intent.getAction();
             if (action.equals(BluetoothDevice.ACTION_PAIRING_REQUEST)) {
                 try {
+                    Log.d("BtManager", "Start Connecting with PIN....");
                     BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
-                    int pin=intent.getIntExtra("android.bluetooth.device.extra.PAIRING_KEY", 1234);
-                    //the pin in case you need to accept for an specific pin
-                    Log.d("BtManager", "Start Pairing with PIN....");
+//                    int pin = intent.getIntExtra("android.bluetooth.device.extra.PAIRING_KEY", usePin);
                     byte[] pinBytes;
-                    pinBytes = (""+pin).getBytes("UTF-8");
+                    pinBytes = usePin.getBytes(StandardCharsets.UTF_8);
                     device.setPin(pinBytes);
-                    // setPairing confirmation if neeeded
+                    // setPairing confirmation if needed
                     device.setPairingConfirmation(true);
                 } catch (Exception e) {
                     Log.e("BtManager", "Error occurs when trying to auto pair");

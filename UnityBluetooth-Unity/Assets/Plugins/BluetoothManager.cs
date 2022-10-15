@@ -42,10 +42,10 @@ public class BluetoothManager
         return javaInstance.Call<string[]>("GetAvailableDevices");
     }
 
-    public static bool Connect(string mac)
+    public static bool Connect(string mac, string pin)
     {
         EnsureInstance();
-        return javaInstance.Call<bool>("Connect", mac);
+        return javaInstance.Call<bool>("Connect", mac, pin);
     }
     
     public static bool Send(string data)
