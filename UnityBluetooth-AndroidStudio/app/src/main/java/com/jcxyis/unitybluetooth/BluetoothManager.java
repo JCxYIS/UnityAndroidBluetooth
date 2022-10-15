@@ -56,8 +56,6 @@ public class BluetoothManager  {
 
     // Start Discovering devices
     public void StartDiscovery() {
-        // init
-
         // init the list
         availableDevices.clear();
 
@@ -199,13 +197,13 @@ public class BluetoothManager  {
             if (action.equals(BluetoothDevice.ACTION_PAIRING_REQUEST)) {
                 try {
                     Log.d("BtManager", "Start Connecting with PIN....");
+                    abortBroadcast(); // hide prompt
                     BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
 //                    int pin = intent.getIntExtra("android.bluetooth.device.extra.PAIRING_KEY", usePin);
                     byte[] pinBytes;
                     pinBytes = usePin.getBytes(StandardCharsets.UTF_8);
                     device.setPin(pinBytes);
-                    // setPairing confirmation if needed
-                    device.setPairingConfirmation(true);
+                    device.setPairingConfirmation(true); // setPairing confirmation if needed
                 } catch (Exception e) {
                     Log.e("BtManager", "Error occurs when trying to auto pair");
                     e.printStackTrace();
