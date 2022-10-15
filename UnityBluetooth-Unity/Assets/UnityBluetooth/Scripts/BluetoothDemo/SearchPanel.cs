@@ -29,6 +29,7 @@ namespace JC.BluetoothUnity.Demo
         public void StartSearching()
         {
             BluetoothManager.StartDiscovery();
+            BluetoothManager.Toast("Start Searching...");
             StopAllCoroutines();
             StartCoroutine(PopulateListAsync());
         }

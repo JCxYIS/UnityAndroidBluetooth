@@ -1,6 +1,6 @@
 ## Unity Bluetooth (Android)
 
-Connect with bluetooth **without PAIRING** in Unity (Android).
+Connect with bluetooth in Unity (Android).
 
 ## Features
 - Scan/Connect to remote device
@@ -17,7 +17,7 @@ Connect with bluetooth **without PAIRING** in Unity (Android).
 ## Notes
 
 ### AndroidManifest Permission
-These are permissions required!! You **MUST** add them to your `AndroidManifest.xml` manifest
+These are permissions required!! You **MUST** add them to your `AndroidManifest.xml` manifest.
 
 ```xml
     <!-- Bluetooth -->
@@ -36,4 +36,4 @@ After you install the app, you may need to manually enable the permissions under
 ## Project Stucture
 - `UnityBluetoohArduino` Contains the simple arduino project, for testing send/write functions.
 - `UnityBluetooth-AndroidStudio` The Android Studio project, to write the android-specified code, and export the .jar plugin to integrate with unity. (the jar is under `./app/release`)
-- `UnityBluetooth-Unity` The Unity project, the jar and library is already here. *(You may just use this to build your unity app.)*
+- `UnityBluetooth-Unity` The Unity project, the jar and library is already here. *(You only need this to build your unity app.)*

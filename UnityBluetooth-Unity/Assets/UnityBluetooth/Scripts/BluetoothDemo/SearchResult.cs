@@ -28,6 +28,10 @@ namespace JC.BluetoothUnity.Demo
             {
                 FindObjectOfType<PanelController>().ShowPanel(PanelController.PanelType.Message);
             }
+            else
+            {
+                BluetoothManager.Toast("Failed to connect!");
+            }
         }
     }
 }

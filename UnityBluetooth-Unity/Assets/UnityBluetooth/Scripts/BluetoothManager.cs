@@ -2,6 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Unity Bluetooth (Android)
+/// https://github.com/JCxYIS/UnityBluetooth
+/// </summary>
 public class BluetoothManager
 {
     private static AndroidJavaClass javaClass; // aka JC :P
@@ -30,55 +34,90 @@ public class BluetoothManager
     /* -------------------------------------------------------------------------- */
     
 
+    /// <summary>
+    /// Start scanning nearby bluetooth devices
+    /// </summary>
     public static void StartDiscovery()
     {
         EnsureInstance();
         javaInstance.Call("StartDiscovery");
     }
 
+    /// <summary>
+    /// Get the list of nearby devices.
+    /// Don't forget to call StartDiscovery() first!
+    /// </summary>
+    /// <returns>A string list. String form: <c>"{Name}|{MAC}"</c></returns>
     public static string[] GetAvailableDevices()
     {
         EnsureInstance();
         return javaInstance.Call<string[]>("GetAvailableDevices");
     }
 
-    public static bool Connect(string mac, string pin)
+    /// <summary>
+    /// Connect to a device with the specified address.
+    /// </summary>
+    /// <param name="mac">Address</param>
+    /// <param name="pin">If the device hasn't been bonded and it has PIN, then this field is required.</param>
+    /// <returns></returns>
+    public static bool Connect(string mac, string pin = "")
     {
         EnsureInstance();
         return javaInstance.Call<bool>("Connect", mac, pin);
     }
-    
+
+    /// <summary>
+    /// Send data to the remote device.
+    /// You need to append newline (e.g. '\n' or '\r\n') by yourself.
+    /// </summary>
+    /// <param name="data"></param>
+    /// <returns></returns>    
     public static bool Send(string data)
     {
         EnsureInstance();
         return javaInstance.Call<bool>("Send", data);
     }
 
+    /// <summary>
+    /// Input stream buffer size
+    /// </summary>
+    /// <returns></returns>
     public static int Available()
     {
         return javaInstance.Call<int>("Available");
     }
 
+    /// <summary>
+    /// Read a line from input stream
+    /// </summary>
+    /// <returns></returns>
     public static string ReadLine()
     {
         EnsureInstance();
         return javaInstance.Call<string>("ReadLine");
     }
 
+    /// <summary>
+    /// Stop the connection
+    /// </summary>
     public static void Stop()
     {
         EnsureInstance();
         javaInstance.Call("Stop");
     }
 
+    /* -------------------------------------------------------------------------- */
+
     /// <summary>
-    /// show a Toast 
+    /// Show a Toast (bottom message)
     /// </summary>
     public static void Toast(string msg)
     {
         EnsureInstance();
         javaClass.CallStatic("Toast", msg);
     }
+
+    /* -------------------------------------------------------------------------- */
 
     public static string[] StrArrTest(int len)
     {

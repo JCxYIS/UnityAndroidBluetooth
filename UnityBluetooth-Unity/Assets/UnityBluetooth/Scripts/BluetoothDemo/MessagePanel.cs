@@ -59,6 +59,10 @@ namespace JC.BluetoothUnity.Demo
                 // send ok
                 _sendInput.text = "";
             }
+            else
+            {
+                BluetoothManager.Toast("Failed to send message!");
+            }
         }
 
         void PushMessage(string msg)
