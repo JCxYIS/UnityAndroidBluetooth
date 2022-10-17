@@ -9,7 +9,7 @@ Connect with bluetooth in Unity (Android).
 - Send/Write Message
 
 ## Demo
-<img src="https://i.imgur.com/SiCdH6U.png" height="400" /> <img src="https://i.imgur.com/efwZzib.png" height="400" /> <img src="https://i.imgur.com/Tw0lsmE.png" height="400" />
+<img src="https://i.imgur.com/SiCdH6U.png" height="400" /> <img src="https://i.imgur.com/Tw0lsmE.png" height="400" />
 
 
 ## Notes
