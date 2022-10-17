@@ -13,6 +13,15 @@ public class BluetoothManager
 
      /* -------------------------------------------------------------------------- */
 
+    [System.Serializable]
+    public struct BluetoothDevice
+    {
+        public string name;
+        public string mac;        
+    }
+
+     /* -------------------------------------------------------------------------- */
+
     private static void EnsureInstance()
     {
         if (Application.platform != RuntimePlatform.Android)
@@ -48,10 +57,22 @@ public class BluetoothManager
     /// Don't forget to call StartDiscovery() first!
     /// </summary>
     /// <returns>A string list. String form: <c>"{Name}|{MAC}"</c></returns>
-    public static string[] GetAvailableDevices()
+    public static List<BluetoothDevice> GetAvailableDevices()
     {
         EnsureInstance();
-        return javaInstance.Call<string[]>("GetAvailableDevices");
+        string[] devices = javaInstance.Call<string[]>("GetAvailableDevices");
+        List<BluetoothDevice> deviceList = new List<BluetoothDevice>();
+        string[] deviceRawStr;
+        for(int i = 0; i < devices.Length; i++)
+        {
+            deviceRawStr = devices[i].Split('|');
+            deviceList.Add(new BluetoothDevice
+            {
+                name = deviceRawStr[0],
+                mac = deviceRawStr[1]
+            });
+        }
+        return deviceList;
     }
 
     /// <summary>

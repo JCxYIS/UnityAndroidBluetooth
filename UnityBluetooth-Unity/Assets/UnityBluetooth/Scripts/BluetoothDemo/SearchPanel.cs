@@ -39,21 +39,18 @@ namespace JC.BluetoothUnity.Demo
             while(true)
             {
                 // Get List
-                string[] deviceList = BluetoothManager.GetAvailableDevices();
-                // string[] deviceList = BluetoothManager.StrArrTest(Random.Range(2,9)); // test
-
+                var deviceList = BluetoothManager.GetAvailableDevices();
 
                 // Delete Old List
                 _populatedResult.ForEach(r => Destroy(r.gameObject));
                 _populatedResult.Clear();
 
                 // Populate List
-                foreach(string deviceRawString in deviceList)
+                foreach(var device in deviceList)
                 {
-                    string[] deviceStrs = deviceRawString.Split('|'); // split with '|'
                     var newResult = Instantiate(_resultTemplate, _resultTemplate.transform.parent);
                     newResult.gameObject.SetActive(true);
-                    newResult.Init(deviceStrs[0], deviceStrs[1], _pinInputField);
+                    newResult.Init(device.name, device.mac, _pinInputField);
                     _populatedResult.Add(newResult);
                 }
 
