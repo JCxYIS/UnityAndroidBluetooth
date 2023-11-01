@@ -13,6 +13,7 @@ namespace JC.BluetoothUnity.Demo
         [SerializeField] Button _clearButt;
         [SerializeField] InputField _sendInput;
         [SerializeField] Button _sendButt;
+        [SerializeField] Text _isConnectedText;
 
         /// <summary>
         /// Start is called on the frame when a script is enabled just before
@@ -37,11 +38,7 @@ namespace JC.BluetoothUnity.Demo
                 string line = BluetoothManager.ReadLine();
                 PushMessage($"<color=lime>REMOTE</color>: {line}\n");
             }
-            else if(available < 0)
-            {
-                // Error!
-                PushMessage("<color=red>CONNECTION LOST</color>\n");
-            }
+            _isConnectedText.text = $"IsConnected: {BluetoothManager.IsConnected()} ({BluetoothManager.GetConnectedDevice()})";
         }
 
         void Stop()

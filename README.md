@@ -14,6 +14,8 @@ Connect with bluetooth in Unity (Android).
 
 ## Notes
 
+<!--
+
 ### AndroidManifest Permission
 These permissions are required!! You **MUST** add them to your manifest (`Plugins/Android/AndroidManifest.xml`).
 
@@ -22,9 +24,11 @@ These permissions are required!! You **MUST** add them to your manifest (`Plugin
     <uses-permission android:name="android.permission.BLUETOOTH"/>
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"/>
     <!-- For scanning nearby devices -->
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />  <!-- Android > 10 -->
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />  <!-- Android 9 -->
 ```
+
+-->
 
 After you install the app, you may need to manually enable the permissions under android application settings.
 

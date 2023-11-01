@@ -3,7 +3,9 @@ package com.jcxyis.unitybluetooth;
 import com.unity3d.player.UnityPlayer;
 import com.unity3d.player.UnityPlayerActivity;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
@@ -11,6 +13,8 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -18,11 +22,11 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.lang.reflect.Array;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.UUID;
 
-@SuppressLint("MissingPermission")
 public class BluetoothManager  {
     // instance (expose for unity to get)
     private static final BluetoothManager _instance = new BluetoothManager();
@@ -49,10 +53,34 @@ public class BluetoothManager  {
         // Input pin code
         IntentFilter filter2 = new IntentFilter(BluetoothDevice.ACTION_PAIRING_REQUEST);
         UnityPlayer.currentActivity.registerReceiver(pairRequestHandler, filter2);
+
+        IntentFilter filter3 = new IntentFilter(BluetoothDevice.ACTION_ACL_DISCONNECTED);
+        UnityPlayer.currentActivity.registerReceiver(disconnectHandler, filter3);
+
     }
 
 
     // --- Bt ---
+
+    public void CheckPermission() {
+        // Request permissions
+        ArrayList<String> perms = new ArrayList<>();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            perms.add(Manifest.permission.ACCESS_BACKGROUND_LOCATION);
+            perms.add(Manifest.permission.ACCESS_FINE_LOCATION);
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            perms.add(Manifest.permission.BLUETOOTH_SCAN);
+            perms.add(Manifest.permission.BLUETOOTH_CONNECT);
+        }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+//           if (UnityPlayer.currentActivity.checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+//                }
+            Log.i("BTManager", "Requesting "+perms.size()+" permissions");
+            UnityPlayer.currentActivity.requestPermissions(perms.toArray(new String[]{}), 0);
+        }
+    }
 
     // Start Discovering devices
     public void StartDiscovery() {
@@ -97,16 +125,29 @@ public class BluetoothManager  {
         }
         catch (Exception e) {
             bt.startDiscovery();
-            Log.e("BtManager", "Failed to connect!!! ");
+            Log.e("BtManager", "Failed to connect!! ");
             e.printStackTrace();
             return false;
         }
     }
 
+    public boolean IsConnected() {
+        if(socket == null)
+            return false;
+        return true;
+//        return socket.isConnected();  // this doesn't check connection state!
+    }
+
+    public String GetConnectedDevice() {
+        if(IsConnected())
+            return connectedDevice.getName()+ '|' + connectedDevice.getAddress();
+        return "|";
+    }
+
     public boolean Send(final String message) {
         try {
             socket.getOutputStream().write(message.getBytes());
-            Log.v("tManager", "Sent "+message);
+            Log.v("BtManager", "Sent "+message);
             return true;
         }
         catch (Exception e) {
@@ -114,11 +155,12 @@ public class BluetoothManager  {
             e.printStackTrace();
             return false;
         }
-//        return false;
     }
 
     // Available
     public int Available() {
+        if(socket == null)
+            return -2;
         try {
             return socket.getInputStream().available();
         }
@@ -148,9 +190,14 @@ public class BluetoothManager  {
     }
 
     // Stop
-    public void Stop() throws IOException {
+    public void Stop() {
         if(socket != null) {
-            socket.close();
+            try {
+                socket.close();
+            } catch (IOException e) {
+                Log.e("BtManager", "Error on disconnecting");
+                e.printStackTrace();
+            }
         }
         socket = null;
         connectedDevice = null;
@@ -209,6 +256,17 @@ public class BluetoothManager  {
                     e.printStackTrace();
                 }
             }
+        }
+    };
+
+    private final BroadcastReceiver disconnectHandler = new BroadcastReceiver() {
+        public void onReceive(Context context, Intent intent) {
+            connectedDevice = null;
+            try {
+                socket.close();
+            } catch (IOException ignored) {}
+            socket = null;
+            connectedDevice = null;
         }
     };
 

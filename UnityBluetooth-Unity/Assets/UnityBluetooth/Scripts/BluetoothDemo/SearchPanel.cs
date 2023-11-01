@@ -18,6 +18,9 @@ namespace JC.BluetoothUnity.Demo
         {
             _resultTemplate.gameObject.SetActive(false);
             _startSearchButt.onClick.AddListener(StartSearching);
+
+            // Check permission first
+            BluetoothManager.CheckPermission();
         }
 
         // Update is called once per frame

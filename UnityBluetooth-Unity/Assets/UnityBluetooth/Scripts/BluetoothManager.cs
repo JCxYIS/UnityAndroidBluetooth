@@ -8,8 +8,8 @@ using UnityEngine;
 /// </summary>
 public class BluetoothManager
 {
-    private static AndroidJavaClass javaClass; // aka JC :P
-    private static AndroidJavaObject javaInstance = null;   
+    private static AndroidJavaClass _javaClass; 
+    private static AndroidJavaObject _javaInstance = null;   
 
      /* -------------------------------------------------------------------------- */
 
@@ -29,18 +29,26 @@ public class BluetoothManager
             throw new System.NotSupportedException("BluetoothManager currently only works on Android.");
         }
 
-        if(javaInstance == null)
-        {
-            // unityPlayer = new AndroidJavaClass("com.unity3d.player.UnityPlayer");
-            // activity = unityPlayer.GetStatic<AndroidJavaObject>("currentActivity");
+        if(_javaInstance == null)
+        {            
             // context = activity.Call<AndroidJavaObject>("getApplicationContext");
-            javaClass = new AndroidJavaClass("com.jcxyis.unitybluetooth.BluetoothManager");
-            javaInstance = javaClass.CallStatic<AndroidJavaObject>("getInstance");
+            _javaClass = new AndroidJavaClass("com.jcxyis.unitybluetooth.BluetoothManager");
+            _javaInstance = _javaClass.CallStatic<AndroidJavaObject>("getInstance");
             Debug.Log("[BluetoothManager] Inited.");
         }                    
     }
 
     /* -------------------------------------------------------------------------- */
+
+    /// <summary>
+    /// Init permission.
+    /// It is recommended to call this method in the first scene (before connect).
+    /// </summary>
+    public static void CheckPermission()
+    {
+        EnsureInstance();
+        _javaInstance.Call("CheckPermission");
+    }
     
 
     /// <summary>
@@ -49,7 +57,7 @@ public class BluetoothManager
     public static void StartDiscovery()
     {
         EnsureInstance();
-        javaInstance.Call("StartDiscovery");
+        _javaInstance.Call("StartDiscovery");
     }
 
     /// <summary>
@@ -60,7 +68,7 @@ public class BluetoothManager
     public static List<BluetoothDevice> GetAvailableDevices()
     {
         EnsureInstance();
-        string[] devices = javaInstance.Call<string[]>("GetAvailableDevices");
+        string[] devices = _javaInstance.Call<string[]>("GetAvailableDevices");
         List<BluetoothDevice> deviceList = new List<BluetoothDevice>();
         string[] deviceRawStr;
         for(int i = 0; i < devices.Length; i++)
@@ -84,7 +92,26 @@ public class BluetoothManager
     public static bool Connect(string mac, string pin = "")
     {
         EnsureInstance();
-        return javaInstance.Call<bool>("Connect", mac, pin);
+        return _javaInstance.Call<bool>("Connect", mac, pin);
+    }
+
+    /// <summary>
+    /// Is Connected?
+    /// </summary>
+    public static bool IsConnected()
+    {
+        EnsureInstance();
+        return _javaInstance.Call<bool>("IsConnected");
+    }
+    
+    /// <summary>
+    /// Get connected device, if no device is connected, return "|".
+    /// </summary>
+    /// <returns>{NAME}|{MAC}</returns>
+    public static string GetConnectedDevice()
+    {
+        EnsureInstance();
+        return _javaInstance.Call<string>("GetConnectedDevice");
     }
 
     /// <summary>
@@ -96,16 +123,16 @@ public class BluetoothManager
     public static bool Send(string data)
     {
         EnsureInstance();
-        return javaInstance.Call<bool>("Send", data);
+        return _javaInstance.Call<bool>("Send", data);
     }
 
     /// <summary>
     /// Input stream buffer size
     /// </summary>
-    /// <returns></returns>
+    /// <returns>Negative value means not connected or error</returns>
     public static int Available()
     {
-        return javaInstance.Call<int>("Available");
+        return _javaInstance.Call<int>("Available");
     }
 
     /// <summary>
@@ -115,7 +142,7 @@ public class BluetoothManager
     public static string ReadLine()
     {
         EnsureInstance();
-        return javaInstance.Call<string>("ReadLine");
+        return _javaInstance.Call<string>("ReadLine");
     }
 
     /// <summary>
@@ -124,7 +151,7 @@ public class BluetoothManager
     public static void Stop()
     {
         EnsureInstance();
-        javaInstance.Call("Stop");
+        _javaInstance.Call("Stop");
     }
 
     /* -------------------------------------------------------------------------- */
@@ -135,7 +162,7 @@ public class BluetoothManager
     public static void Toast(string msg)
     {
         EnsureInstance();
-        javaClass.CallStatic("Toast", msg);
+        _javaClass.CallStatic("Toast", msg);
     }
 
     /* -------------------------------------------------------------------------- */
@@ -143,6 +170,6 @@ public class BluetoothManager
     public static string[] StrArrTest(int len)
     {
         EnsureInstance();
-        return javaInstance.Call<string[]>("StrArrTest", len);
+        return _javaInstance.Call<string[]>("StrArrTest", len);
     }
 }
