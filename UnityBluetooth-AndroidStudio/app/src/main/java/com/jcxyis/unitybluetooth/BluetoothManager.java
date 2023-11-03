@@ -263,7 +263,8 @@ public class BluetoothManager  {
         public void onReceive(Context context, Intent intent) {
             connectedDevice = null;
             try {
-                socket.close();
+                if(socket != null)
+                    socket.close();
             } catch (IOException ignored) {}
             socket = null;
             connectedDevice = null;
