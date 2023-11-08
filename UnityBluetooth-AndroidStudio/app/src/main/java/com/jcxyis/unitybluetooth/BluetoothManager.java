@@ -26,6 +26,7 @@ import java.lang.reflect.Array;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class BluetoothManager  {
     // instance (expose for unity to get)
@@ -36,7 +37,7 @@ public class BluetoothManager  {
 
     // var
     public BluetoothAdapter bt;
-    public ArrayList<BluetoothDevice> availableDevices = new ArrayList<BluetoothDevice>();
+    public ConcurrentLinkedQueue<BluetoothDevice> availableDevices = new ConcurrentLinkedQueue<BluetoothDevice>();
     public BluetoothDevice connectedDevice;
     public BluetoothSocket socket;
     public String usePin = "";
@@ -83,7 +84,9 @@ public class BluetoothManager  {
     }
 
     // Start Discovering devices
+    @SuppressLint("MissingPermission")
     public void StartDiscovery() {
+
         // init the list
         availableDevices.clear();
 
@@ -97,7 +100,10 @@ public class BluetoothManager  {
         Log.i("BtManager", "Start Discovery...");
     }
 
-    // Get Discovery list, in format "Name|Mac"
+    /**
+     * Get Discovery list, in format "Name|Mac"
+     */
+    @SuppressLint("MissingPermission")
     public String[] GetAvailableDevices() {
         ArrayList<String> result = new ArrayList<>();
         for (BluetoothDevice device: availableDevices) {
@@ -108,7 +114,13 @@ public class BluetoothManager  {
         return arr;
     }
 
-    // Connect
+    /**
+     * Connect
+     * @param mac Device mac
+     * @param pin Device pin code (if any)
+     * @return is success?
+     */
+    @SuppressLint("MissingPermission")
     public boolean Connect(final String mac, final String pin) {
         connectedDevice = bt.getRemoteDevice(mac);
         usePin = pin;
@@ -131,13 +143,16 @@ public class BluetoothManager  {
         }
     }
 
+    /**
+     *
+     * @return
+     */
     public boolean IsConnected() {
-        if(socket == null)
-            return false;
-        return true;
+        return socket != null;
 //        return socket.isConnected();  // this doesn't check connection state!
     }
 
+    @SuppressLint("MissingPermission")
     public String GetConnectedDevice() {
         if(IsConnected())
             return connectedDevice.getName()+ '|' + connectedDevice.getAddress();
@@ -211,6 +226,7 @@ public class BluetoothManager  {
     // Append available device list
     // https://stackoverflow.com/questions/19683034/getting-the-address-and-names-of-all-available-bluetooth-devices-in-android
     private final BroadcastReceiver discoverFinishHandler = new BroadcastReceiver() {
+        @SuppressLint("MissingPermission")
         @Override
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
@@ -234,6 +250,7 @@ public class BluetoothManager  {
     // Programmatically input pin code on connect
     // https://stackoverflow.com/questions/35519321/android-bluetooth-pairing-without-user-enter-pin-and-confirmation-using-android
     private final BroadcastReceiver pairRequestHandler = new BroadcastReceiver() {
+        @SuppressLint("MissingPermission")
         public void onReceive(Context context, Intent intent) {
             // no need to use pin
             if(usePin.equals("")) {
