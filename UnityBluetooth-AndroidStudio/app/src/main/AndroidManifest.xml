@@ -2,11 +2,18 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <uses-permission android:name="android.permission.BLUETOOTH" />
-    <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
-    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+    <!-- Bluetooth permission. refer to https://developer.android.com/develop/connectivity/bluetooth/bt-permissions   -->
+    <!-- Request legacy Bluetooth permissions on older devices. (Android <12) -->
+    <uses-permission android:name="android.permission.BLUETOOTH" android:maxSdkVersion="30" />
+    <uses-permission android:name="android.permission.BLUETOOTH" android:maxSdkVersion="30" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" android:maxSdkVersion="30" />
 
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />  <!-- Android > 10 -->
+    <!-- Android >=12   -->
+    <uses-permission android:name="android.permission.BLUETOOTH_SCAN" />
+<!--    <uses-permission android:name="android.permission.BLUETOOTH_ADVERTISE" />-->
+    <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
+
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />  <!-- Android >=10 -->
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />  <!-- Android 9 -->
 
     <application />
